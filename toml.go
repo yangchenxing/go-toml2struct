@@ -6,6 +6,9 @@ import (
 	"path/filepath"
 )
 
+// Load loads toml file as a map[string]interface{} instance and unmarshal it to dest.
+// While the includeKey is not empty, this function will read the files specified by this key,
+// and merge content to the map. After merge, the includeKey will be removed.
 func Load(path, includeKey string, dest interface{}) error {
 	data, err := loadMap(path, includeKey)
 	if err != nil {
