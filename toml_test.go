@@ -27,7 +27,10 @@ type TestTypeA struct {
 }
 
 const (
-	testTomlContent = `
+	test1TomlContent = `
+include = [
+    "test2.toml",
+]
 IntA = 1
 IntB = 2
 IntC = "3"
@@ -36,20 +39,26 @@ IntOct = "0755"
 FloatA = 1.0
 BoolA = false
 BoolB = "true"
+`
+	test2TomlContent = `
 DurationA = "1h"
 TimeA = "2006-01-02:15:04:05"
-
 [EmbedA]
 I = "99"
 `
 )
 
 func TestLoad(t *testing.T) {
-	if err := ioutil.WriteFile("test.toml", []byte(testTomlContent), 0755); err != nil {
-		t.Error("save test.toml fail:", err.Error())
+	if err := ioutil.WriteFile("test1.toml", []byte(test1TomlContent), 0755); err != nil {
+		t.Error("save test1.toml fail:", err.Error())
 		return
 	}
-	defer os.Remove("test.toml")
+	defer os.Remove("test1.toml")
+	if err := ioutil.WriteFile("test2.toml", []byte(test2TomlContent), 0755); err != nil {
+		t.Error("save test2.toml fail:", err.Error())
+		return
+	}
+	defer os.Remove("test2.toml")
 	expectTime, _ := time.Parse("2006-01-02:15:04:05", "2006-01-02:15:04:05")
 	expect := TestTypeA{
 		IntA:      1,
@@ -67,7 +76,7 @@ func TestLoad(t *testing.T) {
 		},
 	}
 	var actual TestTypeA
-	if err := Load("test.toml", "", &actual); err != nil {
+	if err := Load("test1.toml", "include", &actual); err != nil {
 		t.Error("load test.toml fail:", err.Error())
 		return
 	}

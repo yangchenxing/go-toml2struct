@@ -1,7 +1,9 @@
 # go-toml2struct
 
+[![Go Report Card](https://goreportcard.com/badge/github.com/yangchenxing/go-toml2struct)](https://goreportcard.com/report/github.com/yangchenxing/go-toml2struct)
 [![Build Status](https://travis-ci.org/yangchenxing/go-toml2struct.svg?branch=master)](https://travis-ci.org/yangchenxing/go-toml2struct)
 [![GoDoc](http://godoc.org/github.com/yangchenxing/go-toml2struct?status.svg)](http://godoc.org/github.com/yangchenxing/go-toml2struct)
+[![Coverage Status](https://coveralls.io/repos/github/yangchenxing/go-toml2struct/badge.svg?branch=master)](https://coveralls.io/github/yangchenxing/go-toml2struct?branch=master)
 
 go-toml2struct unmarshal toml file to struct.
 
