@@ -48,7 +48,7 @@ I = "99"
 `
 )
 
-func TestLoad(t *testing.T) {
+func TestLoadInclude(t *testing.T) {
 	if err := ioutil.WriteFile("test1.toml", []byte(test1TomlContent), 0755); err != nil {
 		t.Error("save test1.toml fail:", err.Error())
 		return
@@ -82,6 +82,58 @@ func TestLoad(t *testing.T) {
 	}
 	if expect != actual {
 		t.Errorf("load test.toml fail: expected=%s, actual=%s", jsonify(expect), jsonify(actual))
+		return
+	}
+}
+
+func TestLoadNonInclude(t *testing.T) {
+	if err := ioutil.WriteFile("test1.toml", []byte(test1TomlContent), 0755); err != nil {
+		t.Error("save test1.toml fail:", err.Error())
+		return
+	}
+	defer os.Remove("test1.toml")
+	if err := ioutil.WriteFile("test2.toml", []byte(test2TomlContent), 0755); err != nil {
+		t.Error("save test2.toml fail:", err.Error())
+		return
+	}
+	defer os.Remove("test2.toml")
+	expect := TestTypeA{
+		IntA:   1,
+		IntB:   2,
+		IntC:   3,
+		IntHex: 0x0fffffff,
+		IntOct: 0755,
+		FloatA: 1.0,
+		BoolA:  false,
+		BoolB:  true,
+	}
+	var actual TestTypeA
+	if err := Load("test1.toml", "", &actual); err != nil {
+		t.Error("load test.toml fail:", err.Error())
+		return
+	}
+	if expect != actual {
+		t.Errorf("load test.toml fail: expected=%s, actual=%s", jsonify(expect), jsonify(actual))
+		return
+	}
+}
+
+func TestInvalidFile(t *testing.T) {
+	if _, err := loadMap(".", ""); err == nil {
+		t.Error("load invalid file success.")
+		return
+	}
+}
+
+func TestIncludeBadFile(t *testing.T) {
+	if err := ioutil.WriteFile("test.toml", []byte("include=[\"\"]"), 0755); err != nil {
+		t.Error("save test.toml fail:", err.Error())
+		return
+	}
+	defer os.Remove("test.toml")
+	var m map[string]interface{}
+	if err := Load("test.toml", "include", &m); err == nil {
+		t.Error("load test.toml success")
 		return
 	}
 }

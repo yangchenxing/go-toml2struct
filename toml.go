@@ -34,10 +34,7 @@ func loadMap(path, includeKey string) (map[string]interface{}, error) {
 	}
 	// load include
 	for _, include := range includes {
-		includePath, ok := include.(string)
-		if !ok {
-			continue
-		}
+		includePath := include.(string)
 		if !filepath.IsAbs(includePath) {
 			includePath = filepath.Join(filepath.Dir(path), includePath)
 		}
