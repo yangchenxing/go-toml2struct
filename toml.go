@@ -14,7 +14,7 @@ func Load(path, includeKey string, dest interface{}) error {
 	if err != nil {
 		return err
 	}
-	return map2struct.UnmarshalMap(dest, data)
+	return map2struct.Unmarshal(dest, data)
 }
 
 func loadMap(path, includeKey string) (map[string]interface{}, error) {
